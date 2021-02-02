@@ -1,5 +1,5 @@
 #[derive(Debug)]
-struct Stylesheet {
+pub struct Stylesheet {
     rules: Vec<Rule>,
 }
 
@@ -10,15 +10,15 @@ struct Rule {
 }
 
 #[derive(Debug)]
-enum Selector {
+pub enum Selector {
     Simple(SimpleSelector),
 }
 
 #[derive(Debug)]
-struct SimpleSelector {
-    tag_name: Option<String>,
-    id: Option<String>,
-    class: Vec<String>,
+pub struct SimpleSelector {
+    pub tag_name: Option<String>,
+    pub id: Option<String>,
+    pub class: Vec<String>,
 }
 
 pub type Specificity = (usize, usize, usize);
@@ -41,7 +41,7 @@ struct Declaration {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-enum Value {
+pub enum Value {
     Keyword(String),
     Length(f32, Unit),
     ColorValue(Color),
@@ -49,17 +49,17 @@ enum Value {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-enum Unit {
+pub enum Unit {
     Px,
     // insert more units here
 }
 
 #[derive(Debug, Clone, PartialEq, Default)]
-struct Color {
-    r: u8,
-    g: u8,
-    b: u8,
-    a: u8,
+pub struct Color {
+    pub r: u8,
+    pub g: u8,
+    pub b: u8,
+    pub a: u8,
 }
 
 /// Parse a whole CSS stylesheet.

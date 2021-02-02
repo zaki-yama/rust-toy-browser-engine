@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug)]
 pub struct Node {
@@ -17,8 +17,21 @@ pub enum NodeType {
 
 #[derive(Debug)]
 pub struct ElementData {
-    tag_name: String,
-    attributes: AttrMap,
+    pub tag_name: String,
+    pub attributes: AttrMap,
+}
+
+impl ElementData {
+    pub fn id(&self) -> Option<&String> {
+        self.attributes.get("id")
+    }
+
+    pub fn classes(&self) -> HashSet<&str> {
+        match self.attributes.get("class") {
+            Some(classlist) => classlist.split(' ').collect(),
+            None => HashSet::new(),
+        }
+    }
 }
 
 pub type AttrMap = HashMap<String, String>;
