@@ -4,5 +4,11 @@ pub mod html;
 pub mod style;
 
 fn main() {
-    println!("Hello, world!");
+    let value = Some(String::from("hello"));
+
+    let result = value.iter().any(|name| {
+        println!("{}", name);
+        name.eq("hello")
+    });
+    println!("{}", result);
 }
