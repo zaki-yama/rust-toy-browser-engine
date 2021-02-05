@@ -42,3 +42,14 @@ fn consume_char(&mut self) -> char {
   - DOM Treeを走査し各要素にマッチするruleを検索する
   - 複数見つかった場合は詳細度(specificity)の一番高いものを選ぶ
   - 今回実装したCSSパーサーはセレクタを詳細度の高い順に保持している(css > `parse_selectors()` 参照)ので最初の１個を選べばよい
+- The Cascade
+  - webページのオーナーが提供するスタイルシート：author style sheets
+  - それに加えて、ブラウザが提供するデフォルトのスタイル：user agent style shetts
+  - ユーザーがカスタムスタイルを追加するuser style sheets
+  - 3つの "origins" のうちどれが優先されるかをカスケードという
+    - 6つのレベルがある
+  - このブラウザではカスケードは未実装。なので `<head>` タグとかも自分で明示的に消す必要がある
+  - カスケードの実装はまあまあ簡単で、各ルールのoriginをトラックし、declarationを詳細度に加えoriginとimportanceでソートすればよい
+- Computed Values
+- Inheritance
+- Style Attributes
