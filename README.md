@@ -53,3 +53,19 @@ fn consume_char(&mut self) -> char {
 - Computed Values
 - Inheritance
 - Style Attributes
+
+## Part 5: Layout
+- Part 4 で作成したStyle treeをinputにし、Layout treeを作る
+
+### The Box Model
+- content area: コンテンツが描画される矩形領域(rectangular section)
+- width, height, ページ内でのpositionを持つ
+- content area の周りに padding, borders, margins
+
+
+### The Layout Tree
+- layout tree: box の集まり(collection)
+- box は dimensions と子の box を持つ
+- box は Block, Inline, Anonymous のいずれかのノード
+- style tree を走査しながら、display の値を見て layout tree に box を追加していく
+  - 今回は display: none なら追加しないという実装

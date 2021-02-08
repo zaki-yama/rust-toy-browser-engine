@@ -8,11 +8,36 @@ use crate::{
 /// Map from CSS property names to values.
 type PropertyMap = HashMap<String, Value>;
 
+enum Display {
+    Inline,
+    Block,
+    None,
+}
+
 /// A node with associated style data.
 pub struct StyledNode<'a> {
     pub node: &'a Node, // pointer to a DOM node
     pub specified_values: PropertyMap,
     pub children: Vec<StyledNode<'a>>,
+}
+
+impl<'a> StyledNode<'a> {
+    /// Return the specified value of a property if it exists, otherwise `None`.
+    fn value(&self, name: &str) -> Option<Value> {
+        self.specified_values.get(name).map(|v| v.clone())
+    }
+
+    /// The value of the `display` property (default to inline).
+    pub fn display(&self) -> Display {
+        match self.value("display") {
+            Some(Value::Keyword(s)) => match &*s {
+                "block" => Display::Block,
+                "none" => Display::None,
+                _ => Display::Inline,
+            },
+            _ => Display::Inline,
+        }
+    }
 }
 
 type MatchedRule<'a> = (Specificity, &'a Rule);
