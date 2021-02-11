@@ -235,6 +235,15 @@ impl<'a> LayoutBox<'a> {
             + d.padding.top;
     }
 
+    fn layout_block_children(&mut self) {
+        let d = &mut self.dimensions;
+        for child in &mut self.children {
+            child.layout(*d);
+            // Track the height so each child is laid out below the previous content.
+            d.content.height = d.content.height + child.dimensions.margin_box().height;
+        }
+    }
+
     fn get_style_node(&self) -> &'a StyledNode<'a> {
         match self.box_type {
             BoxType::BlockNode(node) | BoxType::InlineNode(node) => node,
@@ -264,6 +273,34 @@ fn build_layout_tree<'a>(style_node: &'a StyledNode<'a>) -> LayoutBox<'a> {
         }
     }
     root
+}
+
+impl Dimensions {
+    /// The area covered by the content area plus its padding.
+    fn padding_box(self) -> Rect {
+        self.content.expanded_by(self.padding)
+    }
+
+    /// The area covered by the content area plus padding and borders.
+    fn border_box(self) -> Rect {
+        self.padding_box().expanded_by(self.border)
+    }
+
+    /// The area covered by the content area plus padding, borders and margin.
+    fn margin_box(self) -> Rect {
+        self.border_box().expanded_by(self.margin)
+    }
+}
+
+impl Rect {
+    fn expanded_by(self, edge: EdgeSizes) -> Rect {
+        Rect {
+            x: self.x - edge.left,
+            y: self.y - edge.top,
+            width: self.width + edge.left + edge.right,
+            height: self.height + edge.top + edge.right,
+        }
+    }
 }
 
 fn sum<I>(iter: I) -> f32

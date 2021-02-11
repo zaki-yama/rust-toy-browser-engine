@@ -106,3 +106,19 @@ fn consume_char(&mut self) -> char {
 d.content.y = containing_block.content.height + containing_block.content.y +
               d.margin.top + d.border.top + d.padding.top;
 ```
+
+### Children
+
+- Positioning の最後で触れた `containing_block.content.height` の更新をやっているのが `layout_block_children()`
+- margin collapsing (?) は未実装
+- [Rust] ↓ のところで containing_block がムーブしてるって怒られないのはなぜ？と思ったら Copy トレイト実装してるからだった
+
+```rust
+fn layout_block(&mut self, containing_block: Dimensions) {
+    // Child width can depend on parent width, so we need to calculate
+    // this box's width before laying out its children.
+    self.calculate_block_width(containing_block);
+
+    // Determine where the box is located within its container.
+    self.calculate_block_position(containing_block);
+```

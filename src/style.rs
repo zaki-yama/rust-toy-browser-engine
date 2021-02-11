@@ -8,7 +8,7 @@ use crate::{
 /// Map from CSS property names to values.
 type PropertyMap = HashMap<String, Value>;
 
-enum Display {
+pub enum Display {
     Inline,
     Block,
     None,
