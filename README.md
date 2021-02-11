@@ -88,10 +88,21 @@ fn consume_char(&mut self) -> char {
 
 ### Calculating the Width
 
-- 子が親の width を変えることはできないので、自身のwidthが親のwidthにフィットしているかを確認する必要がある
-  - CSSのspecではconstraintsのセットで表現されている
+- 子が親の width を変えることはできないので、自身の width が親の width にフィットしているかを確認する必要がある
+  - CSS の spec では constraints のセットで表現されている
 - 計算アルゴリズム
-  - 要素の(margin, paddingも含めた)トータルのwidthを計算する -> `total`
-  - トータルのwidthが親(containing_block)のwidthを超えていた場合、
-    - margin_leftまたはmargin_rightがautoなら0をセットする
+  - 要素の(margin, padding も含めた)トータルの width を計算する -> `total`
+  - トータルの width が親(containing_block)の width を超えていた場合、
+    - margin_left または margin_right が auto なら 0 をセットする
   - underflow = containing_block.content.width - total;
+
+### Positioning
+
+- width の計算よりはシンプル
+- 要素の margin, border, padding の幅を計算し、親(containing_block)の content の x 座標から margin, border, padding の left 部分だけずらした位置が content の x 座標
+- y 座標も同様だが、垂直方向にスタックする挙動にするためには、要素を追加するたびに ↓ の `containing_block.content.height` が更新されてないといけない
+
+```rust
+d.content.y = containing_block.content.height + containing_block.content.y +
+              d.margin.top + d.border.top + d.padding.top;
+```
