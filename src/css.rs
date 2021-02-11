@@ -48,6 +48,16 @@ pub enum Value {
     // insert more values here
 }
 
+impl Value {
+    /// Return the size of a length in px, or zero for non-lengths.
+    pub fn to_px(&self) -> f32 {
+        match *self {
+            Value::Length(f, Unit::Px) => f,
+            _ => 0.0,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Unit {
     Px,
