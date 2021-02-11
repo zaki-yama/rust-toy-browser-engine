@@ -244,6 +244,14 @@ impl<'a> LayoutBox<'a> {
         }
     }
 
+    fn calculate_block_height(&mut self) {
+        // If the height is set to an explicit length, use that exact length.
+        // Otherwise, just keep the value set by `layout_block_children`.
+        if let Some(Length(h, Unit::Px)) = self.get_style_node().value("height") {
+            self.dimensions.content.height = h;
+        }
+    }
+
     fn get_style_node(&self) -> &'a StyledNode<'a> {
         match self.box_type {
             BoxType::BlockNode(node) | BoxType::InlineNode(node) => node,
