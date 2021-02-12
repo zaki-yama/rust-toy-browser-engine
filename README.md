@@ -122,3 +122,22 @@ fn layout_block(&mut self, containing_block: Dimensions) {
     // Determine where the box is located within its container.
     self.calculate_block_position(containing_block);
 ```
+
+
+
+## Part 7: Painting 101
+
+- "rasterization" (日本語だとラスタライズかな)と呼ばれる処理
+- ここでは矩形描画のみ
+
+### Building the Display List
+
+- 前 Part で作成した layout tree から、はじめに display list と呼ばれるものを作る
+- display list は "円を描け" "テキスト文字を描け" のような描画に関する命令のリスト
+- なぜ直接描画せず display list に一度変換するのか？
+  - 後々の命令で完全にカバーされる要素を検索し、取り除いて無駄な描画を排除できる
+  - 一部の要素しか変更されていないことを知っている場合、display list を変更したり再利用できる
+  - 同じ display list から異なるアウトプット(たとえばスクリーン用にピクセル、プリンタ用にベクタ)を生成できる
+- display list を構築するには、基本的には LayoutBox を順に走査しながら background -> border -> content というように描画すればよい
+- デフォルトでは HTML 要素は登場する順にスタックされるので、2つの要素にオーバーラップがあれば、後者が上に描画される
+  - `z-index` がサポートされていればまた違った実装になる (display list を stacking order 順にソートする必要がある)

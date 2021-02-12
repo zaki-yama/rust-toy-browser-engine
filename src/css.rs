@@ -64,7 +64,7 @@ pub enum Unit {
     // insert more units here
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct Color {
     pub r: u8,
     pub g: u8,

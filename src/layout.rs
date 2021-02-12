@@ -14,39 +14,39 @@ use crate::{
 // CSS box model. All sizes are in px.
 
 #[derive(Clone, Copy, Default, Debug)]
-struct Dimensions {
+pub struct Dimensions {
     // Position of the content area relative to the document origin:
     content: Rect,
 
     // Surrounding edges:
     padding: EdgeSizes,
-    border: EdgeSizes,
+    pub border: EdgeSizes,
     margin: EdgeSizes,
 }
 
 #[derive(Clone, Copy, Default, Debug)]
-struct Rect {
-    x: f32,
-    y: f32,
-    width: f32,
-    height: f32,
+pub struct Rect {
+    pub x: f32,
+    pub y: f32,
+    pub width: f32,
+    pub height: f32,
 }
 
 #[derive(Clone, Copy, Default, Debug)]
-struct EdgeSizes {
-    left: f32,
-    right: f32,
-    top: f32,
-    bottom: f32,
+pub struct EdgeSizes {
+    pub left: f32,
+    pub right: f32,
+    pub top: f32,
+    pub bottom: f32,
 }
 
-struct LayoutBox<'a> {
-    dimensions: Dimensions,
+pub struct LayoutBox<'a> {
+    pub dimensions: Dimensions,
     pub box_type: BoxType<'a>,
-    children: Vec<LayoutBox<'a>>,
+    pub children: Vec<LayoutBox<'a>>,
 }
 
-enum BoxType<'a> {
+pub enum BoxType<'a> {
     BlockNode(&'a StyledNode<'a>),
     InlineNode(&'a StyledNode<'a>),
     AnonymousBlock,
@@ -290,7 +290,7 @@ impl Dimensions {
     }
 
     /// The area covered by the content area plus padding and borders.
-    fn border_box(self) -> Rect {
+    pub fn border_box(self) -> Rect {
         self.padding_box().expanded_by(self.border)
     }
 
