@@ -123,8 +123,6 @@ fn layout_block(&mut self, containing_block: Dimensions) {
     self.calculate_block_position(containing_block);
 ```
 
-
-
 ## Part 7: Painting 101
 
 - "rasterization" (日本語だとラスタライズかな)と呼ばれる処理
@@ -139,5 +137,11 @@ fn layout_block(&mut self, containing_block: Dimensions) {
   - 一部の要素しか変更されていないことを知っている場合、display list を変更したり再利用できる
   - 同じ display list から異なるアウトプット(たとえばスクリーン用にピクセル、プリンタ用にベクタ)を生成できる
 - display list を構築するには、基本的には LayoutBox を順に走査しながら background -> border -> content というように描画すればよい
-- デフォルトでは HTML 要素は登場する順にスタックされるので、2つの要素にオーバーラップがあれば、後者が上に描画される
+- デフォルトでは HTML 要素は登場する順にスタックされるので、2 つの要素にオーバーラップがあれば、後者が上に描画される
   - `z-index` がサポートされていればまた違った実装になる (display list を stacking order 順にソートする必要がある)
+
+### Rasterization
+
+- [Rust] `clamp` は 1.50.0 で実装された
+  - ref. [Announcing Rust 1.50.0 | Rust Blog](https://blog.rust-lang.org/2021/02/11/Rust-1.50.0.html#library-changes)
+- `paing_item()` は不透明な色 (opaque colors) しか対応してない。 `opacity` や `rgba()` をサポートする場合は色をブレンドする必要がある
