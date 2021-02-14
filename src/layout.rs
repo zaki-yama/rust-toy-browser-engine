@@ -1,7 +1,4 @@
-use std::{alloc::Layout, task::Context};
-
 use crate::{
-    css::Stylesheet,
     css::{
         Unit,
         Value::{Keyword, Length},
@@ -16,7 +13,7 @@ use crate::{
 #[derive(Clone, Copy, Default, Debug)]
 pub struct Dimensions {
     // Position of the content area relative to the document origin:
-    content: Rect,
+    pub content: Rect,
 
     // Surrounding edges:
     padding: EdgeSizes,

@@ -99,10 +99,10 @@ fn get_color(layout_box: &LayoutBox, name: &str) -> Option<Color> {
     }
 }
 
-struct Canvas {
-    pixels: Vec<Color>,
-    width: usize,
-    height: usize,
+pub struct Canvas {
+    pub pixels: Vec<Color>,
+    pub width: usize,
+    pub height: usize,
 }
 
 impl Canvas {
@@ -142,7 +142,7 @@ impl Canvas {
 }
 
 /// Paint a tree of LayoutBoxes to an array of pixels.
-fn paint(layout_root: &LayoutBox, bounds: Rect) -> Canvas {
+pub fn paint(layout_root: &LayoutBox, bounds: Rect) -> Canvas {
     let display_list = build_display_list(layout_root);
     let mut canvas = Canvas::new(bounds.width as usize, bounds.height as usize);
     for item in display_list {
