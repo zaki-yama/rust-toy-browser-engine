@@ -145,3 +145,11 @@ fn layout_block(&mut self, containing_block: Dimensions) {
 - [Rust] `clamp` は 1.50.0 で実装された
   - ref. [Announcing Rust 1.50.0 | Rust Blog](https://blog.rust-lang.org/2021/02/11/Rust-1.50.0.html#library-changes)
 - `paing_item()` は不透明な色 (opaque colors) しか対応してない。 `opacity` や `rgba()` をサポートする場合は色をブレンドする必要がある
+
+### Pretty Pictures
+
+- [main.rs](https://github.com/mbrubeck/robinson/blob/master/src/main.rs) を実装する
+- pdf は別途実装の必要がある。スキップ
+- `image` (https://docs.rs/image/0.23.13/image) は v0.14.0 と最新版ではインターフェースちょっと変わってる
+  - `ImageRgba8` は `image::DynamicImage::ImageRgba8` から
+  - `save()` に渡すのはファイルではなくパス。フォーマットも省略できる
