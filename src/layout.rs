@@ -317,7 +317,7 @@ impl Rect {
             x: self.x - edge.left,
             y: self.y - edge.top,
             width: self.width + edge.left + edge.right,
-            height: self.height + edge.top + edge.right,
+            height: self.height + edge.top + edge.bottom,
         }
     }
 }
