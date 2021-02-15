@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 getopts = "0.2.21"
-image = "0.14"
+image = "0.23.13"

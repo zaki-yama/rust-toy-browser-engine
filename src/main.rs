@@ -50,7 +50,6 @@ fn main() {
 
     // Create the output file:
     let filename = str_arg("o", if png { "output.png" } else { "output.pdf" });
-    let mut file = BufWriter::new(File::create(&filename).unwrap());
 
     // Write to the file:
     let ok = if png {
@@ -60,9 +59,7 @@ fn main() {
             let color = canvas.pixels[(y * w + x) as usize];
             image::Pixel::from_channels(color.r, color.g, color.b, color.a)
         });
-        // TODO: image 最新ver では ImageRgba8 はなかった
-        // ref. https://docs.rs/image/0.23.13/image/
-        image::ImageRgba8(img).save(&mut file, image::PNG).is_ok()
+        image::DynamicImage::ImageRgba8(img).save(&filename).is_ok()
     } else {
         // TODO: save as pdf
         true
