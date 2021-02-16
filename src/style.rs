@@ -1,9 +1,7 @@
 use std::collections::HashMap;
 
-use crate::{
-    css::{Rule, Selector, SimpleSelector, Specificity, Stylesheet, Value},
-    dom::{ElementData, Node, NodeType},
-};
+use crate::css::{Rule, Selector, SimpleSelector, Specificity, Stylesheet, Value};
+use crate::dom::{ElementData, Node, NodeType};
 
 /// Map from CSS property names to values.
 type PropertyMap = HashMap<String, Value>;

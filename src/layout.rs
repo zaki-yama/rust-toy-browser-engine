@@ -1,10 +1,6 @@
-use crate::{
-    css::{
-        Unit,
-        Value::{Keyword, Length},
-    },
-    style::StyledNode,
-};
+use crate::css::Unit;
+use crate::css::Value::{Keyword, Length};
+use crate::style::{Display, StyledNode};
 
 ///! Basic CSS block layout.
 
@@ -275,20 +271,20 @@ pub fn layout_tree<'a>(
 fn build_layout_tree<'a>(style_node: &'a StyledNode<'a>) -> LayoutBox<'a> {
     // Create the root box.
     let mut root = LayoutBox::new(match style_node.display() {
-        Block => BoxType::BlockNode(style_node),
-        Inline => BoxType::InlineNode(style_node),
-        DisplayNone => panic!("Root node has display: none."),
+        Display::Block => BoxType::BlockNode(style_node),
+        Display::Inline => BoxType::InlineNode(style_node),
+        Display::None => panic!("Root node has display: none."),
     });
 
     // Create the descendant boxes.
     for child in &style_node.children {
         match child.display() {
-            Block => root.children.push(build_layout_tree(child)),
-            Inline => root
+            Display::Block => root.children.push(build_layout_tree(child)),
+            Display::Inline => root
                 .get_inline_container()
                 .children
                 .push(build_layout_tree(child)),
-            DisplayNone => {} // Skip nodess with `display: none;`
+            Display::None => {} // Skip nodess with `display: none;`
         }
     }
     root

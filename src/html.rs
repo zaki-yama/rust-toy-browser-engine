@@ -1,8 +1,6 @@
+use crate::dom;
 use std::collections::HashMap;
 
-use dom::Node;
-
-use crate::dom;
 struct Parser {
     pos: usize,
     input: String,

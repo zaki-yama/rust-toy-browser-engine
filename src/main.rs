@@ -1,6 +1,5 @@
 use core::panic;
 use std::fs::File;
-use std::io::BufWriter;
 use std::io::Read;
 
 extern crate getopts;
