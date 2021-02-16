@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Node {
     // data common to all nodes:
     pub children: Vec<Node>,
@@ -9,13 +9,13 @@ pub struct Node {
     pub node_type: NodeType,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum NodeType {
     Text(String),
     Element(ElementData),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct ElementData {
     pub tag_name: String,
     pub attributes: AttrMap,

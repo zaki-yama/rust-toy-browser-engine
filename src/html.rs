@@ -149,3 +149,66 @@ pub fn parse(source: String) -> dom::Node {
         dom::elem(String::from("html"), HashMap::new(), nodes)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use crate::dom::{elem, text};
+
+    use super::parse;
+
+    #[test]
+    fn test_dom() {
+        let source = String::from(
+            r#"
+<html>
+    <body>
+        <h1>Title</h1>
+        <div id="main" class="test">
+            <p>Hello <em>world</em>!</p>
+        </div>
+    </body>
+</html>
+"#,
+        );
+
+        let mut div_attrs = HashMap::new();
+        div_attrs.insert(String::from("id"), String::from("main"));
+        div_attrs.insert(String::from("class"), String::from("test"));
+        let expected = elem(
+            String::from("html"),
+            HashMap::new(),
+            vec![elem(
+                String::from("body"),
+                HashMap::new(),
+                vec![
+                    elem(
+                        String::from("h1"),
+                        HashMap::new(),
+                        vec![text(String::from("Title"))],
+                    ),
+                    elem(
+                        String::from("div"),
+                        div_attrs,
+                        vec![elem(
+                            String::from("p"),
+                            HashMap::new(),
+                            vec![
+                                text(String::from("Hello ")),
+                                elem(
+                                    String::from("em"),
+                                    HashMap::new(),
+                                    vec![text(String::from("world"))],
+                                ),
+                                text(String::from("!")),
+                            ],
+                        )],
+                    ),
+                ],
+            )],
+        );
+
+        assert_eq!(expected, parse(source));
+    }
+}
