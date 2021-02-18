@@ -215,8 +215,7 @@ impl Parser {
     }
 
     fn parse_unit(&mut self) -> Unit {
-        let foo = &*self.parse_identifier().to_ascii_lowercase();
-        match foo {
+        match &*self.parse_identifier().to_ascii_lowercase() {
             "px" => Unit::Px,
             _ => panic!("unrecognized unit"),
         }
