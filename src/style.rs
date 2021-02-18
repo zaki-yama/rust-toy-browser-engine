@@ -71,7 +71,7 @@ fn specified_values(elem: &ElementData, stylesheet: &Stylesheet) -> PropertyMap 
     // Go through the rules from lowest to highest specificity.
     rules.sort_by(|&(a, _), &(b, _)| a.cmp(&b));
     for (_, rule) in rules {
-        for declaration in &rule.decralations {
+        for declaration in &rule.declarations {
             values.insert(declaration.name.clone(), declaration.value.clone());
         }
     }

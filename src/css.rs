@@ -6,7 +6,7 @@ pub struct Stylesheet {
 #[derive(Debug)]
 pub struct Rule {
     pub selectors: Vec<Selector>,
-    pub decralations: Vec<Declaration>,
+    pub declarations: Vec<Declaration>,
 }
 
 #[derive(Debug)]
@@ -102,11 +102,11 @@ impl Parser {
         rules
     }
 
-    /// Parse a rule set: `<selectors> { <decralations> }`.
+    /// Parse a rule set: `<selectors> { <declarations> }`.
     pub fn parse_rule(&mut self) -> Rule {
         Rule {
             selectors: self.parse_selectors(),
-            decralations: self.parse_declarations(),
+            declarations: self.parse_declarations(),
         }
     }
 
