@@ -1,20 +1,20 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Stylesheet {
     pub rules: Vec<Rule>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Rule {
     pub selectors: Vec<Selector>,
     pub declarations: Vec<Declaration>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Selector {
     Simple(SimpleSelector),
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct SimpleSelector {
     pub tag_name: Option<String>,
     pub id: Option<String>,
@@ -34,7 +34,7 @@ impl Selector {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Declaration {
     pub name: String,
     pub value: Value,
@@ -284,5 +284,221 @@ fn valid_identifier_char(c: char) -> bool {
     match c {
         'a'..='z' | 'A'..='Z' | '0'..='9' | '-' | '_' => true, // TODO: Include U+00A0 and higher.
         _ => false,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_id() {
+        let source = String::from(
+            r#"
+        #foo {
+            display: inline;
+        }
+        "#,
+        );
+
+        let expected = Stylesheet {
+            rules: vec![Rule {
+                selectors: vec![Selector::Simple(SimpleSelector {
+                    class: vec![],
+                    id: Some(String::from("foo")),
+                    tag_name: None,
+                })],
+                declarations: vec![Declaration {
+                    name: String::from("display"),
+                    value: Value::Keyword(String::from("inline")),
+                }],
+            }],
+        };
+        assert_eq!(expected, parse(source));
+    }
+
+    #[test]
+    fn test_parse_class() {
+        let source = String::from(
+            r#"
+        .foo {
+            display: inline;
+        }
+        "#,
+        );
+
+        let expected = Stylesheet {
+            rules: vec![Rule {
+                selectors: vec![Selector::Simple(SimpleSelector {
+                    class: vec![String::from("foo")],
+                    id: None,
+                    tag_name: None,
+                })],
+                declarations: vec![Declaration {
+                    name: String::from("display"),
+                    value: Value::Keyword(String::from("inline")),
+                }],
+            }],
+        };
+        assert_eq!(expected, parse(source));
+    }
+
+    #[test]
+    fn test_parse_multiple_selectors() {
+        let source = String::from(
+            r#"
+        foo, bar {
+            display: inline;
+        }
+        "#,
+        );
+
+        let expected = Stylesheet {
+            rules: vec![Rule {
+                selectors: vec![
+                    Selector::Simple(SimpleSelector {
+                        class: vec![],
+                        id: None,
+                        tag_name: Some(String::from("foo")),
+                    }),
+                    Selector::Simple(SimpleSelector {
+                        class: vec![],
+                        id: None,
+                        tag_name: Some(String::from("bar")),
+                    }),
+                ],
+                declarations: vec![Declaration {
+                    name: String::from("display"),
+                    value: Value::Keyword(String::from("inline")),
+                }],
+            }],
+        };
+        assert_eq!(expected, parse(source));
+    }
+
+    #[test]
+    fn test_parse_multiple_declarations() {
+        let source = String::from(
+            r#"
+        html {
+            width: 600px;
+            padding: 10px;
+            border-width: 1px;
+            margin: auto;
+            background: #aabbcc;
+        }
+        "#,
+        );
+
+        let expected = Stylesheet {
+            rules: vec![Rule {
+                selectors: vec![Selector::Simple(SimpleSelector {
+                    class: vec![],
+                    id: None,
+                    tag_name: Some(String::from("html")),
+                })],
+                declarations: vec![
+                    Declaration {
+                        name: String::from("width"),
+                        value: Value::Length(600.0, Unit::Px),
+                    },
+                    Declaration {
+                        name: String::from("padding"),
+                        value: Value::Length(10.0, Unit::Px),
+                    },
+                    Declaration {
+                        name: String::from("border-width"),
+                        value: Value::Length(1.0, Unit::Px),
+                    },
+                    Declaration {
+                        name: String::from("margin"),
+                        value: Value::Keyword(String::from("auto")),
+                    },
+                    Declaration {
+                        name: String::from("background"),
+                        value: Value::ColorValue(Color {
+                            r: 170,
+                            g: 187,
+                            b: 204,
+                            a: 255,
+                        }),
+                    },
+                ],
+            }],
+        };
+        assert_eq!(expected, parse(source));
+    }
+
+    #[test]
+    fn test_parse_multiple_rules() {
+        let source = String::from(
+            r#"
+        h1, h2, h3 {
+          margin: auto;
+          color: #cc0000;
+        }
+        div.note {
+          margin-bottom: 20px;
+          padding: 10px;
+        }
+        "#,
+        );
+
+        let expected = Stylesheet {
+            rules: vec![
+                Rule {
+                    selectors: vec![
+                        Selector::Simple(SimpleSelector {
+                            class: vec![],
+                            id: None,
+                            tag_name: Some(String::from("h1")),
+                        }),
+                        Selector::Simple(SimpleSelector {
+                            class: vec![],
+                            id: None,
+                            tag_name: Some(String::from("h2")),
+                        }),
+                        Selector::Simple(SimpleSelector {
+                            class: vec![],
+                            id: None,
+                            tag_name: Some(String::from("h3")),
+                        }),
+                    ],
+                    declarations: vec![
+                        Declaration {
+                            name: String::from("margin"),
+                            value: Value::Keyword(String::from("auto")),
+                        },
+                        Declaration {
+                            name: String::from("color"),
+                            value: Value::ColorValue(Color {
+                                r: 204,
+                                g: 0,
+                                b: 0,
+                                a: 255,
+                            }),
+                        },
+                    ],
+                },
+                Rule {
+                    selectors: vec![Selector::Simple(SimpleSelector {
+                        class: vec![String::from("note")],
+                        id: None,
+                        tag_name: Some(String::from("div")),
+                    })],
+                    declarations: vec![
+                        Declaration {
+                            name: String::from("margin-bottom"),
+                            value: Value::Length(20.0, Unit::Px),
+                        },
+                        Declaration {
+                            name: String::from("padding"),
+                            value: Value::Length(10.0, Unit::Px),
+                        },
+                    ],
+                },
+            ],
+        };
+        assert_eq!(expected, parse(source));
     }
 }
