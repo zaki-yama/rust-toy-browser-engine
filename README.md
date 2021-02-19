@@ -1,3 +1,24 @@
+Toy Browser Rendering Engine in Rust
+==========================
+
+["Let's build a browser engine!"](http://limpet.net/mbrubeck/2014/08/08/toy-layout-engine-1.html)
+を写経したもの
+
+## Usage
+
+```zsh
+$ cargo build
+$ ./target/debug/rust-toy-browser-engine --html <path_to_html> --css <path_to_css>
+
+# Examples:
+$ ./target/debug/rust-toy-browser-engine --html examples/test.html --css examples/test.css
+$ ./target/debug/rust-toy-browser-engine --html examples/perf-rainbow.html --css examples/perf-rainbow.css
+```
+
+で `output.png` に結果が出力されます。
+
+---
+# memo
 ## Part 2: HTML
 
 - `fn consume_char()`
