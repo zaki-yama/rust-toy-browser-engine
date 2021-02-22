@@ -13,6 +13,7 @@ pub enum Display {
 }
 
 /// A node with associated style data.
+#[derive(Debug, PartialEq)]
 pub struct StyledNode<'a> {
     pub node: &'a Node, // pointer to a DOM node
     pub specified_values: PropertyMap,
@@ -125,4 +126,56 @@ fn matches_simple_selector(elem: &ElementData, selector: &SimpleSelector) -> boo
 
     // We didn't find any non-matching selector components.
     true
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use super::{style_tree, StyledNode};
+    use crate::css;
+    use crate::css::{Color, Value};
+    use crate::dom::{elem, text};
+    use crate::html;
+
+    #[test]
+    fn test_style_tree_overwrite() {
+        let html_source = String::from(r#"<p class="name">Hello</p>"#);
+
+        let css_source = String::from(
+            r#"
+        p {
+          color: #cccccc;
+        }
+
+        p.name {
+          color: #cc0000;
+        }
+        "#,
+        );
+        let root = html::parse(html_source);
+        let css = css::parse(css_source);
+
+        let mut specified_values = HashMap::new();
+        specified_values.insert(
+            String::from("color"),
+            Value::ColorValue(Color {
+                r: 204,
+                g: 0,
+                b: 0,
+                a: 255,
+            }),
+        );
+        let text = text(String::from("Hello"));
+        let expected = StyledNode {
+            node: &root,
+            specified_values,
+            children: vec![StyledNode {
+                node: &text,
+                specified_values: HashMap::new(),
+                children: vec![],
+            }],
+        };
+        assert_eq!(expected, style_tree(&root, &css));
+    }
 }
